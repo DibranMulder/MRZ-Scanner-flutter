@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:passport_mrz_parser/custom/custom_logger_extension.dart';
 
 import '../controllers/mrz_controller.dart';
 import '../helpers/mrz_scanner.dart';
@@ -19,6 +20,8 @@ class _ScannerPageState extends State<ScannerPage> {
         return MRZScanner(
           controller: controller,
           onSuccess: (mrzResult, lines) async {
+            'MRZ Scanned'.logSuccess();
+
             ///[lines] is a list of String that contains the scanned MRZ (separated by \n)
             final mrzText = lines.join('\n');
             await showDialog(

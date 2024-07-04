@@ -1,3 +1,6 @@
+import 'package:logger/logger.dart';
+import 'package:passport_mrz_parser/custom/custom_logger_extension.dart';
+
 class MRZHelper {
   static List<String>? getFinalListToParse(List<String> ableToScanTextList) {
     if (ableToScanTextList.length < 2) {
@@ -12,9 +15,13 @@ class MRZHelper {
       // to make sure that all lines are the same in length
     }
     List<String> firstLineChars = ableToScanTextList.first.split('');
-    List<String> supportedDocTypes = ['A', 'C', 'P', 'V', 'I'];
+    List<String> supportedDocTypes = [
+      'P',
+      'V',
+    ]; // you can add more doc types like A,C,I are also supported
     String fChar = firstLineChars[0];
     if (supportedDocTypes.contains(fChar)) {
+      'Passport or Visa MRZ detected'.logInfo();
       return [...ableToScanTextList];
     }
     return null;
