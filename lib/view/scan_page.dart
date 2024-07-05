@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:passport_mrz_parser/custom/custom_logger_extension.dart';
 
 import '../controllers/mrz_controller.dart';
@@ -25,6 +27,8 @@ class _ScannerPageState extends State<ScannerPage> {
             ///[lines] is a list of String that contains the scanned MRZ (separated by \n)
             final mrzText = lines.join('\n');
             await showDialog(
+              barrierDismissible: false,
+              barrierLabel: 'Data',
               context: context,
               builder: (context) => Dialog(
                 insetPadding: const EdgeInsets.symmetric(horizontal: 10),
@@ -33,23 +37,55 @@ class _ScannerPageState extends State<ScannerPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextButton(
+                      //Parsed MRZ data
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Name : ${mrzResult.givenNames}'),
+                            Text('Surname : ${mrzResult.surnames}'),
+                            Text(
+                                'Gender : ${mrzResult.sex.name.toUpperCase()}'),
+                            Text('CountryCode : ${mrzResult.countryCode}'),
+                            Text('Date of Birth : ${mrzResult.birthDate}'),
+                            Text('Expiry Date : ${mrzResult.expiryDate}'),
+                            Text('DocNum : ${mrzResult.documentNumber}'),
+                          ],
+                        ),
+                      ),
+
+                      //RAW MRZ data
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'MRZ : $mrzText',
+                          style: const TextStyle(
+                              color: Colors.indigo, fontSize: 12),
+                        ),
+                      ),
+
+                      CupertinoButton(
                         onPressed: () {
                           Navigator.pop(context);
                           controller.currentState?.resetScanning();
                         },
-                        child: const Text('Tap to Reset Scanning'),
+                        child: Container(
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: const Color.fromARGB(255, 55, 209, 112),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Center(
+                                  child: Text(
+                                'Tap to Reset Scanning',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 0, 0)),
+                              )),
+                            )),
                       ),
-                      //Parsed MRZ data
-                      Text('Name : ${mrzResult.givenNames}'),
-                      Text('Gender : ${mrzResult.sex.name}'),
-                      Text('CountryCode : ${mrzResult.countryCode}'),
-                      Text('Date of Birth : ${mrzResult.birthDate}'),
-                      Text('Expiry Date : ${mrzResult.expiryDate}'),
-                      Text('DocNum : ${mrzResult.documentNumber}'),
-
-                      //RAW MRZ data
-                      Text('MRZ : $mrzText'),
                     ],
                   ),
                 ),

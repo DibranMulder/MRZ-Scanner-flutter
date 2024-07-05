@@ -1,4 +1,3 @@
-import 'package:logger/logger.dart';
 import 'package:passport_mrz_parser/custom/custom_logger_extension.dart';
 
 class MRZHelper {
