@@ -1,4 +1,4 @@
-package com.akdev.passport_mrz_parser
+package com.akdev.mrz_parser
 
 import io.flutter.embedding.android.FlutterActivity
 
