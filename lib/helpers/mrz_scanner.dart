@@ -61,22 +61,28 @@ class MRZScannerState extends State<MRZScanner> {
     if (_isBusy) return;
     _isBusy = true;
 
-    final recognizedText = await _textRecognizer.processImage(inputImage);
-    String fullText = recognizedText.text;
-    String trimmedText = fullText.replaceAll(' ', '');
-    List allText = trimmedText.split('\n');
+    try {
+      final recognizedText = await _textRecognizer.processImage(inputImage);
+      String fullText = recognizedText.text;
+      String trimmedText = fullText.replaceAll(' ', '');
+      List allText = trimmedText.split('\n');
 
-    List<String> ableToScanText = [];
-    for (var e in allText) {
-      if (MRZHelper.testTextLine(e).isNotEmpty) {
-        ableToScanText.add(MRZHelper.testTextLine(e));
+      List<String> ableToScanText = [];
+      for (var e in allText) {
+        if (MRZHelper.testTextLine(e).isNotEmpty) {
+          ableToScanText.add(MRZHelper.testTextLine(e));
+        }
+      }
+      List<String>? result = MRZHelper.getFinalListToParse([...ableToScanText]);
+
+      if (result != null) {
+        _parseScannedText([...result]);
+      } else {
+        _isBusy = false;
       }
     }
-    List<String>? result = MRZHelper.getFinalListToParse([...ableToScanText]);
-
-    if (result != null) {
-      _parseScannedText([...result]);
-    } else {
+    catch (e) {
+      print('Error processing image: $e');
       _isBusy = false;
     }
   }
